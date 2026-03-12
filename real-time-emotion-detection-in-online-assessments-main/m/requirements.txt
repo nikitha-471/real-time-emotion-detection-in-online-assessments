@@ -1,0 +1,10 @@
+flask
+flask_pymongo
+tensorflow
+keras
+pandas
+numpy
+opencv-contrib-python
+scikit-learn
+tqdm
+

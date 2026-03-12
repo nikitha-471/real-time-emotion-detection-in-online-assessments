@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | EmVi</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #dfe4ec;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-box {
+            background: #f8f8f8;
+            padding: 40px;
+            border-radius: 18px;
+            width: 360px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+
+        .login-box img {
+            width: 90px;
+            margin-bottom: 10px;
+        }
+
+        .login-box h2 {
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 18px;
+            border: 1px solid #c7c7c7;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: #e8eef8;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #2f66d0;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #2556b4;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <img src="{{ url_for('static', filename='emvi-logo.jpeg') }}" alt="Logo">
+        <h2>Admin Login</h2>
+
+        <form action="{{ url_for('admin_login') }}" method="POST">
+            <input type="text" name="username" placeholder="Admin Username" required>
+            <input type="password" name="password" placeholder="Admin Password" required>
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div>
+</body>
+</html>

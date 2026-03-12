@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+            font-family:'Segoe UI', Arial, sans-serif;
+            transition:background-color 0.25s ease,color 0.25s ease,border-color 0.25s ease;
+        }
+
+        body{
+            background:#f6f8fb;
+            color:#111827;
+        }
+
+        .topbar{
+            background:#ffffff;
+            border-bottom:1px solid #e5e7eb;
+            padding:18px 28px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:sticky;
+            top:0;
+            z-index:20;
+        }
+
+        .profile-wrap{
+            display:flex;
+            align-items:center;
+            gap:14px;
+        }
+
+        .profile-wrap img{
+            width:48px;
+            height:48px;
+            border-radius:50%;
+            border:1px solid #dbe2ea;
+            background:#eef2ff;
+            padding:6px;
+        }
+
+        .profile-meta{
+            display:flex;
+            flex-direction:column;
+            gap:4px;
+        }
+
+        .profile-name{
+            font-size:15px;
+            font-weight:700;
+            color:#0f172a;
+        }
+
+        .profile-role{
+            font-size:13px;
+            color:#64748b;
+        }
+
+        .topbar-actions{
+            display:flex;
+            gap:10px;
+            align-items:center;
+        }
+
+        .icon-btn,
+        .logout-btn{
+            border:1px solid #dbe2ea;
+            background:white;
+            color:#0f172a;
+            border-radius:10px;
+            padding:10px 14px;
+            font-size:14px;
+            font-weight:600;
+            cursor:pointer;
+            text-decoration:none;
+        }
+
+        .icon-btn:hover,
+        .logout-btn:hover{
+            background:#f8fafc;
+        }
+
+        .page-shell{
+            max-width:1280px;
+            margin:0 auto;
+            padding:28px;
+        }
+
+        .hero{
+            display:flex;
+            justify-content:space-between;
+            gap:18px;
+            margin-bottom:22px;
+            flex-wrap:wrap;
+        }
+
+        .hero-left h1{
+            font-size:28px;
+            font-weight:750;
+            color:#0f172a;
+            margin-bottom:8px;
+        }
+
+        .hero-left p{
+            font-size:14px;
+            color:#64748b;
+            line-height:1.7;
+            max-width:700px;
+        }
+
+        .mini-stats{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .mini-stat{
+            min-width:150px;
+            background:#ffffff;
+            border:1px solid #e5e7eb;
+            border-radius:16px;
+            padding:16px 18px;
+        }
+
+        .mini-stat span{
+            display:block;
+            font-size:12px;
+            color:#64748b;
+            margin-bottom:6px;
+        }
+
+        .mini-stat strong{
+            font-size:24px;
+            color:#0f172a;
+            font-weight:750;
+        }
+
+        .tabs{
+            display:flex;
+            gap:10px;
+            margin-bottom:22px;
+            flex-wrap:wrap;
+        }
+
+        .tab-btn{
+            padding:10px 16px;
+            border-radius:999px;
+            background:#ffffff;
+            border:1px solid #e5e7eb;
+            color:#334155;
+            font-size:14px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        .tab-btn.active{
+            background:#0f172a;
+            color:white;
+            border-color:#0f172a;
+        }
+
+        .tab-content{
+            display:none;
+        }
+
+        .tab-content.active{
+            display:block;
+        }
+
+        .card{
+            background:white;
+            border:1px solid #e5e7eb;
+            border-radius:18px;
+            padding:22px;
+            margin-bottom:18px;
+        }
+
+        .card h2{
+            color:#0f172a;
+            margin-bottom:8px;
+        }
+
+        .card p.sub{
+            color:#64748b;
+            font-size:14px;
+            margin-bottom:16px;
+        }
+
+        .question-block{
+            border:1px solid #e5e7eb;
+            border-radius:14px;
+            padding:16px;
+            margin-bottom:14px;
+            background:#fafbfc;
+        }
+
+        .question-title{
+            font-size:15px;
+            font-weight:700;
+            color:#111827;
+            margin-bottom:12px;
+        }
+
+        label{
+            display:block;
+            font-size:13px;
+            font-weight:600;
+            color:#475569;
+            margin-bottom:6px;
+        }
+
+        input[type="text"],
+        textarea,
+        select{
+            width:100%;
+            border:1px solid #dbe2ea;
+            border-radius:10px;
+            padding:11px 12px;
+            margin-bottom:12px;
+            font-size:14px;
+            background:#ffffff;
+            outline:none;
+        }
+
+        textarea{
+            min-height:74px;
+            resize:vertical;
+        }
+
+        .button-row{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .primary-btn,
+        .secondary-btn,
+        .performance-link{
+            border:none;
+            border-radius:10px;
+            padding:11px 16px;
+            font-size:14px;
+            font-weight:700;
+            cursor:pointer;
+            text-decoration:none;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .primary-btn{
+            background:#0f172a;
+            color:white;
+        }
+
+        .secondary-btn{
+            background:#eef2f7;
+            color:#0f172a;
+        }
+
+        .performance-link{
+            background:#e8f3ef;
+            color:#136f56;
+            padding:8px 12px;
+            font-size:13px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:10px;
+        }
+
+        th, td{
+            padding:14px 12px;
+            border-bottom:1px solid #e5e7eb;
+            text-align:left;
+            font-size:14px;
+        }
+
+        th{
+            color:#475569;
+            font-size:13px;
+            font-weight:700;
+        }
+
+        .score-pill{
+            display:inline-block;
+            background:#eef2ff;
+            color:#1e3a8a;
+            padding:6px 10px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .empty-state{
+            color:#64748b;
+            font-size:14px;
+        }
+
+        /* MODAL */
+        .modal-overlay{
+            position:fixed;
+            inset:0;
+            background:rgba(15, 23, 42, 0.6);
+            display:none;
+            justify-content:center;
+            align-items:center;
+            z-index:999;
+            padding:20px;
+        }
+
+        .modal-box{
+            width:100%;
+            max-width:760px;
+            background:white;
+            border-radius:18px;
+            padding:24px;
+            border:1px solid #e5e7eb;
+            box-shadow:0 25px 60px rgba(0,0,0,0.2);
+        }
+
+        .modal-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:10px;
+            margin-bottom:18px;
+        }
+
+        .modal-title{
+            font-size:20px;
+            font-weight:700;
+            color:#0f172a;
+        }
+
+        .close-btn{
+            border:none;
+            background:#eef2f7;
+            color:#0f172a;
+            padding:8px 12px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:700;
+        }
+
+        .chart-wrap{
+            margin-top:12px;
+        }
+
+        /* DARK MODE */
+        .dark-mode{
+            background:#0b1220;
+            color:#f8fafc;
+        }
+
+        .dark-mode .topbar,
+        .dark-mode .mini-stat,
+        .dark-mode .tab-btn,
+        .dark-mode .card,
+        .dark-mode .question-block,
+        .dark-mode .icon-btn,
+        .dark-mode .logout-btn,
+        .dark-mode input,
+        .dark-mode textarea,
+        .dark-mode select,
+        .dark-mode .modal-box{
+            background:#111827;
+            color:#f8fafc;
+            border-color:#263041;
+        }
+
+        .dark-mode .profile-name,
+        .dark-mode .hero-left h1,
+        .dark-mode .mini-stat strong,
+        .dark-mode .card h2,
+        .dark-mode .question-title,
+        .dark-mode .modal-title{
+            color:white;
+        }
+
+        .dark-mode .profile-role,
+        .dark-mode .hero-left p,
+        .dark-mode .mini-stat span,
+        .dark-mode .card p.sub,
+        .dark-mode label,
+        .dark-mode th,
+        .dark-mode .empty-state{
+            color:#cbd5e1;
+        }
+
+        .dark-mode .tab-btn.active,
+        .dark-mode .primary-btn{
+            background:white;
+            color:#0f172a;
+            border-color:white;
+        }
+
+        .dark-mode .secondary-btn{
+            background:#1f2937;
+            color:#e5e7eb;
+        }
+
+        .dark-mode .performance-link{
+            background:#16342b;
+            color:#b9f1dd;
+        }
+
+        .dark-mode th,
+        .dark-mode td{
+            border-bottom-color:#263041;
+        }
+
+        .dark-mode .score-pill{
+            background:#1f2937;
+            color:#e5e7eb;
+        }
+
+        .dark-mode .close-btn{
+            background:#1f2937;
+            color:#e5e7eb;
+        }
+
+        @media (max-width:900px){
+            .hero{
+                flex-direction:column;
+            }
+            .page-shell{
+                padding:20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="profile-wrap">
+            <img src="{{ url_for('static', filename='emvi-logo.jpeg') }}" alt="Logo">
+            <div class="profile-meta">
+                <div class="profile-name">{{ name }}</div>
+                <div class="profile-role">Teacher Dashboard</div>
+            </div>
+        </div>
+
+        <div class="topbar-actions">
+            <button class="icon-btn" onclick="toggleTheme()">◐</button>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="page-shell">
+        <div class="hero">
+            <div class="hero-left">
+                <h1>Welcome back, {{ name }}</h1>
+                <p>Create assignments, view student scores, and open individual emotion graphs in one place.</p>
+            </div>
+
+            <div class="mini-stats">
+                {% set assignment_count = results|length %}
+                {% set ns = namespace(total_submissions=0) %}
+                {% for item in results %}
+                    {% set ns.total_submissions = ns.total_submissions + (item.submissions|length) %}
+                {% endfor %}
+
+                <div class="mini-stat">
+                    <span>Assignments</span>
+                    <strong>{{ assignment_count }}</strong>
+                </div>
+
+                <div class="mini-stat">
+                    <span>Submissions</span>
+                    <strong>{{ ns.total_submissions }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('create', event)">Create Assignment</button>
+            <button class="tab-btn" onclick="showTab('scores', event)">View Scores</button>
+        </div>
+
+        <!-- CREATE ASSIGNMENT -->
+        <div id="create" class="tab-content active">
+            <div class="card">
+                <h2>Create Assignment</h2>
+                <p class="sub">Start with one question and add more when needed.</p>
+
+                <form action="{{ url_for('create_assignment') }}" method="POST" id="assignmentForm">
+                    <label>Assignment Title</label>
+                    <input type="text" name="title" placeholder="Enter assignment title" required>
+
+                    <div id="questionsContainer"></div>
+
+                    <div class="button-row">
+                        <button type="button" class="secondary-btn" onclick="addQuestion()">Add Question</button>
+                        <button type="submit" class="primary-btn">Create Assignment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW SCORES -->
+        <div id="scores" class="tab-content">
+            <div class="card">
+                <h2>View Scores</h2>
+                <p class="sub">See all submitted assignment scores and open one student’s graph at a time.</p>
+
+                {% if results %}
+                    {% set chart_ns = namespace(index=0) %}
+                    {% for item in results %}
+                    <div style="margin-bottom:24px;">
+                        <div class="question-title">{{ item.assignment.title }}</div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Score</th>
+                                    <th>Performance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if item.submissions %}
+                                    {% for sub in item.submissions %}
+                                    {% set chart_ns.index = chart_ns.index + 1 %}
+                                    <tr>
+                                        <td>{{ sub.student }}</td>
+                                        <td><span class="score-pill">{{ sub.score }}</span></td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                class="performance-link"
+                                                onclick="showPerformanceModal('Performance - {{ sub.student }}', 'emotionChart{{ chart_ns.index }}')">
+                                                View
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3">No submissions yet.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">No assignments created yet.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- PERFORMANCE MODAL -->
+    <div id="performanceModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Performance</div>
+                <button class="close-btn" onclick="closePerformanceModal()">Close</button>
+            </div>
+
+            <div class="chart-wrap">
+                <canvas id="modalChartCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId, event) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if (event) {
+                event.target.classList.add('active');
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        let questionCount = 0;
+
+        function addQuestion() {
+            if (questionCount >= 10) {
+                alert("Maximum 10 questions allowed");
+                return;
+            }
+
+            questionCount++;
+
+            const container = document.getElementById("questionsContainer");
+
+            const block = document.createElement("div");
+            block.className = "question-block";
+
+            block.innerHTML = `
+                <div class="question-title">Question ${questionCount}</div>
+
+                <label>Question</label>
+                <textarea name="q${questionCount}" placeholder="Enter question ${questionCount}"></textarea>
+
+                <label>Option A</label>
+                <input type="text" name="q${questionCount}_a" placeholder="Option A">
+
+                <label>Option B</label>
+                <input type="text" name="q${questionCount}_b" placeholder="Option B">
+
+                <label>Option C</label>
+                <input type="text" name="q${questionCount}_c" placeholder="Option C">
+
+                <label>Option D</label>
+                <input type="text" name="q${questionCount}_d" placeholder="Option D">
+
+                <label>Correct Answer</label>
+                <select name="q${questionCount}_answer">
+                    <option value="">Select answer</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            `;
+
+            container.appendChild(block);
+        }
+
+        // Start with one question
+        window.onload = function () {
+            addQuestion();
+        };
+
+        let modalChartInstance = null;
+
+        function showPerformanceModal(title, sourceCanvasId) {
+            const sourceCanvas = document.getElementById(sourceCanvasId);
+            if (!sourceCanvas) return;
+
+            const sourceChart = Chart.getChart(sourceCanvas);
+            if (!sourceChart) return;
+
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('performanceModal').style.display = 'flex';
+
+            const modalCtx = document.getElementById('modalChartCanvas').getContext('2d');
+
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+            }
+
+            modalChartInstance = new Chart(modalCtx, {
+                type: sourceChart.config.type,
+                data: JSON.parse(JSON.stringify(sourceChart.config.data)),
+                options: JSON.parse(JSON.stringify(sourceChart.config.options))
+            });
+        }
+
+        function closePerformanceModal() {
+            document.getElementById('performanceModal').style.display = 'none';
+        }
+    </script>
+
+    {% if results %}
+        {% set chart_ns = namespace(index=0) %}
+        {% for item in results %}
+            {% if item.submissions %}
+                {% for sub in item.submissions %}
+                    {% set chart_ns.index = chart_ns.index + 1 %}
+                    <div style="display:none;">
+                        <canvas id="emotionChart{{ chart_ns.index }}"></canvas>
+                    </div>
+
+                    <script>
+                        (function() {
+                            const ctx = document.getElementById('emotionChart{{ chart_ns.index }}');
+                            if (!ctx) return;
+
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: [{% if sub.emotion_counts %}{% for emotion, count in sub.emotion_counts.items() %}'{{ emotion }}'{% if not loop.last %}, {% endif %}{% endfor %}{% else %}'No Data'{% endif %}],
+                                    datasets: [{
+                                        label: 'Emotion Count',
+                                        data: [{% if sub.emotion_counts %}{% for emotion, count in sub.emotion_counts.items() %}{{ count }}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}0{% endif %}],
+                                        backgroundColor: [
+                                            'rgba(59, 130, 246, 0.75)',
+                                            'rgba(16, 185, 129, 0.75)',
+                                            'rgba(245, 158, 11, 0.75)',
+                                            'rgba(239, 68, 68, 0.75)',
+                                            'rgba(168, 85, 247, 0.75)',
+                                            'rgba(20, 184, 166, 0.75)'
+                                        ],
+                                        borderRadius: 8
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            display: false
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: {
+                                                precision: 0
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        })();
+                    </script>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

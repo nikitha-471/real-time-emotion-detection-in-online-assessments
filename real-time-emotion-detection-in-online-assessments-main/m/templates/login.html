@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | EmVi</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(99, 102, 241, 0.35), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.30), transparent 28%),
+        linear-gradient(135deg, #0f172a, #1e3a8a 45%, #2563eb 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-wrapper {
+      width: 100%;
+      max-width: 1050px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .left-panel {
+      padding: 56px 48px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .brand img {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.92);
+      padding: 8px;
+    }
+
+    .brand-text h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .brand-text p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.82);
+    }
+
+    .hero-title {
+      font-size: 42px;
+      line-height: 1.15;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.82);
+      max-width: 520px;
+      margin-bottom: 32px;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 14px;
+      max-width: 520px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+
+    .feature-icon {
+      min-width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .feature-text h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .feature-text p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.76);
+      line-height: 1.5;
+    }
+
+    .right-panel {
+      background: #ffffff;
+      padding: 46px 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 390px;
+    }
+
+    .login-badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .login-card h2 {
+      font-size: 32px;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .login-card .subtitle {
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #dbe2ea;
+      border-radius: 14px;
+      outline: none;
+      font-size: 15px;
+      background: #f8fafc;
+      transition: 0.25s ease;
+    }
+
+    .field input:focus {
+      border-color: #2563eb;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .role-box {
+      background: #f8fafc;
+      border: 1px solid #dbe2ea;
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+    }
+
+    .role-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 12px;
+    }
+
+    .role-options {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .role-options label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: #334155;
+      cursor: pointer;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      transition: 0.25s ease;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.22);
+      margin-bottom: 12px;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 24px rgba(37, 99, 235, 0.28);
+    }
+
+    .secondary-btn {
+      background: #0f172a;
+      color: white;
+    }
+
+    .secondary-btn:hover {
+      background: #020617;
+    }
+
+    .bottom-text {
+      text-align: center;
+      margin-top: 18px;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .bottom-text a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .login-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .left-panel {
+        padding: 38px 28px;
+      }
+
+      .right-panel {
+        padding: 36px 24px;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .left-panel {
+        padding: 28px 20px;
+      }
+
+      .right-panel {
+        padding: 28px 18px;
+      }
+
+      .hero-title {
+        font-size: 28px;
+      }
+
+      .login-card h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+
+    <div class="left-panel">
+      <div class="brand">
+        <img src="{{ url_for('static', filename='emvi-logo.jpeg') }}" alt="EmVi Logo">
+        <div class="brand-text">
+          <h1>EmVi</h1>
+          <p>Emotion Based Virtual Invigilation</p>
+        </div>
+      </div>
+
+      <div class="hero-title">
+        Smarter online assessments with real-time emotion insights.
+      </div>
+
+      <div class="hero-subtitle">
+        Manage exams, monitor engagement, and review performance with a cleaner, faster, and more professional experience.
+      </div>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">📷</div>
+          <div class="feature-text">
+            <h3>Live emotion tracking</h3>
+            <p>Monitor student expressions during assessments for better proctoring and analysis.</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-text">
+            <h3>Instant performance review</h3>
+            <p>View score summaries and emotion-based insights in one place.</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-text">
+            <h3>Role-based access</h3>
+            <p>Separate experiences for students, teachers, and admin with a polished workflow.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="login-card">
+        <div class="login-badge">Secure Portal Access</div>
+        <h2>Welcome back</h2>
+        <div class="subtitle">
+          Sign in to continue to your assessment dashboard.
+        </div>
+
+        <form action="/login" method="POST">
+          <div class="field">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+          </div>
+
+          <div class="role-box">
+            <div class="role-title">Select Role</div>
+            <div class="role-options">
+              <label>
+                <input type="radio" name="role" value="student" checked>
+                Student
+              </label>
+
+              <label>
+                <input type="radio" name="role" value="teacher">
+                Teacher
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="primary-btn">Login</button>
+        </form>
+
+        <a href="{{ url_for('direct_admin') }}">
+          <button class="secondary-btn" type="button">Login as Admin</button>
+        </a>
+
+        <div class="bottom-text">
+          Access the platform with your assigned role credentials.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
